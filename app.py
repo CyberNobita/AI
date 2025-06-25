@@ -1,16 +1,12 @@
+# app.py
 import gradio as gr
-import os
 from model_loader import MODELS, load_models
 from chat_utils import chat, download_chat
 
-# Load models at startup
 loaded_models = load_models(MODELS)
 
-# Get the port from the environment variable (Render-specific)
-PORT = int(os.getenv("PORT", "8080"))
-
 with gr.Blocks(theme=gr.themes.Monochrome()) as demo:
-    gr.Markdown("<h1 style='text-align:center;'>💻 Lightweight Coding Chatbot</h1>")
+    gr.Markdown("<h1 style='text-align:center;'>🧠 Lightweight Coding Assistant</h1>")
 
     with gr.Row():
         model_selector = gr.Dropdown(choices=list(MODELS.keys()), value=list(MODELS.keys())[0], label="Choose Model")
@@ -23,18 +19,10 @@ with gr.Blocks(theme=gr.themes.Monochrome()) as demo:
 
     chat_state = gr.State([])
 
-    submit_btn.click(
-        lambda prompt, history, model: chat(prompt, history, model, loaded_models),
-        inputs=[prompt_box, chat_state, model_selector],
-        outputs=[chatbot, chat_state]
-    )
-    prompt_box.submit(
-        lambda prompt, history, model: chat(prompt, history, model, loaded_models),
-        inputs=[prompt_box, chat_state, model_selector],
-        outputs=[chatbot, chat_state]
-    )
+    submit_btn.click(chat, [prompt_box, chat_state, model_selector, loaded_models], [chatbot, chat_state])
+    prompt_box.submit(chat, [prompt_box, chat_state, model_selector, loaded_models], [chatbot, chat_state])
     clear_button.click(lambda: ([], []), None, [chatbot, chat_state])
-    download_btn.click(download_chat, [chat_state], None)
+    download_btn.click(download_chat, [chat_state], file_name="chat.txt")
 
-# Use the dynamic port for Render
-demo.launch(server_name="0.0.0.0", server_port=PORT)
+if __name__ == "__main__":
+    demo.launch(server_name="0.0.0.0", server_port=8080)
