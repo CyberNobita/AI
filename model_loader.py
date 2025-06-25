@@ -1,22 +1,20 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
-# Add more Hugging Face model IDs here
+# Lightweight model (~15MB) perfect for 512MB RAM
 MODELS = {
     "Tiny-GPT2": "sshleifer/tiny-gpt2",
-    # "GPT2": "gpt2",  # Optional extra
 }
 
 def load_models(model_map):
     print("Loading models...")
     all_models = {}
     for name, hf_id in model_map.items():
-        tokenizer = AutoTokenizer.from_pretrained(hf_id, trust_remote_code=True)
+        tokenizer = AutoTokenizer.from_pretrained(hf_id)
         model = AutoModelForCausalLM.from_pretrained(
             hf_id,
-            trust_remote_code=True,
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto" if torch.cuda.is_available() else None
+            torch_dtype=torch.float32,
+            device_map=None
         )
         all_models[name] = {"tokenizer": tokenizer, "model": model}
     print("All models loaded.")
