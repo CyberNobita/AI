@@ -3,7 +3,7 @@ import torch
 
 # Add more Hugging Face model IDs here
 MODELS = {
-    "CodeParrot-Small": "codeparrot/codeparrot-small",
+    "Tiny-GPT2": "sshleifer/tiny-gpt2",
     # "GPT2": "gpt2",  # Optional extra
 }
 
