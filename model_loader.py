@@ -1,20 +1,18 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 
-# Lightweight model (~15MB) perfect for 512MB RAM
 MODELS = {
-    "Tiny-GPT2": "sshleifer/tiny-gpt2",
+    "Flan-T5-Small": "google/flan-t5-small",
 }
 
 def load_models(model_map):
     print("Loading models...")
     all_models = {}
     for name, hf_id in model_map.items():
-        tokenizer = AutoTokenizer.from_pretrained(hf_id)
-        model = AutoModelForCausalLM.from_pretrained(
+        tokenizer = AutoTokenizer.from_pretrained(hf_id, use_fast=False)
+        model = AutoModelForSeq2SeqLM.from_pretrained(
             hf_id,
-            torch_dtype=torch.float32,
-            device_map=None
+            torch_dtype=torch.float32
         )
         all_models[name] = {"tokenizer": tokenizer, "model": model}
     print("All models loaded.")
