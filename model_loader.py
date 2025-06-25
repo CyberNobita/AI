@@ -1,19 +1,18 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 MODELS = {
-    "Flan-T5-Small": "google/flan-t5-small",
+    "Tiny-GPT2": "sshleifer/tiny-gpt2"
 }
 
 def load_models(model_map):
-    print("Loading models...")
     all_models = {}
     for name, hf_id in model_map.items():
-        tokenizer = AutoTokenizer.from_pretrained(hf_id, use_fast=False)
-        model = AutoModelForSeq2SeqLM.from_pretrained(
+        tokenizer = AutoTokenizer.from_pretrained(hf_id)
+        model = AutoModelForCausalLM.from_pretrained(
             hf_id,
-            torch_dtype=torch.float32
+            torch_dtype=torch.float32,
         )
+        model.eval()
         all_models[name] = {"tokenizer": tokenizer, "model": model}
-    print("All models loaded.")
     return all_models
