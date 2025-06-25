@@ -3,7 +3,7 @@ import torch
 
 # Add more Hugging Face model IDs here
 MODELS = {
-    "Qwen3-0.6B": "rohitnagareddy/Qwen3-0.6B-Coding-Finetuned-v1",
+    "CodeParrot-Small": "codeparrot/codeparrot-small",
     # "GPT2": "gpt2",  # Optional extra
 }
 
